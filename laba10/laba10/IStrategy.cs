@@ -8,7 +8,7 @@ namespace laba10
 {
     public interface IStrategy
     {
-        int[] Algorithm(int[] mas, bool flag = true);
+        int[] Algorithm(int[] mas);
     }
 
 }

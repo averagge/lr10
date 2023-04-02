@@ -17,7 +17,7 @@ namespace laba10
         public Context() { }
         public void ExecuteAlgorithm(bool flag = true)
         {
-            ContextStrategy.Algorithm(array, flag);
+            ContextStrategy.Algorithm(array);
         }
     }
 
