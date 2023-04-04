@@ -19,13 +19,89 @@ namespace laba10
         public int count;
         private BubbleSort bubbleSort;
         private Shell shell;
-/*        saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
-        openFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";*/
+        private IOFile iOFile;
+
         public void Print(int comparison, int permut, string time)
         {
             label1.Text = Convert.ToString(comparison);
             label2.Text = Convert.ToString(permut);
             label3.Text = time;
+        }
+        public void SaveData()
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string path = saveFileDialog1.FileName;
+            System.IO.File.WriteAllText(path, IOFile.content);
+        }
+/*        public void LoadData()
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string path = openFileDialog1.FileName;
+            using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
+            {
+                Separator(sr);
+                sr.Close();
+            }
+        }*/
+        private void Separator(StreamReader streamReader)
+        {
+            List<string> arrayList = new List<string>();
+            char[] listChar = { };
+            int CurrentFilePosition = 0;
+            int TempMultiplicationResult = 0;
+            int LoadedArrayElement = 0;
+            int TempDigitCapacity = 0;
+            while (streamReader.Peek() != -1)
+            {
+                if (streamReader.Peek() == 32)
+                {
+                    char[] vs = new char[2 * CurrentFilePosition];
+                    streamReader.Read(vs, CurrentFilePosition, 1);
+                    CurrentFilePosition++;
+                }
+                else if (streamReader.Peek() >= 48 && streamReader.Peek() <= 57)
+                {
+                    do
+                    {
+                        if (streamReader.Peek() == -1)
+                        {
+                            break;
+                        }
+                        streamReader.Read(listChar, CurrentFilePosition, 1);
+                        int.TryParse(Convert.ToString(listChar[CurrentFilePosition]), out TempMultiplicationResult);
+                        TempMultiplicationResult *= Convert.ToInt32(Math.Pow(10.0, TempDigitCapacity));
+                        LoadedArrayElement += TempMultiplicationResult;
+                        CurrentFilePosition++;
+                        TempDigitCapacity++;
+                    }
+                    while (streamReader.Peek() != 32);
+                    string output = new string(Convert.ToString(LoadedArrayElement).ToCharArray().Reverse().ToArray());
+                    int.TryParse(output, out LoadedArrayElement);
+                    arrayList.Add(Convert.ToString(LoadedArrayElement));
+
+                    TempDigitCapacity = 0;
+                    TempMultiplicationResult = 0;
+                    LoadedArrayElement = 0;
+                }
+                else
+                {
+                    MessageBox.Show("Некорректный формат загружаемого файла.");
+                    break;
+                }
+            }
+            Context.array = new int[arrayList.Count];
+            for (int k = 0; k < arrayList.Count; k++)
+            {
+                int.TryParse(arrayList[k], out Context.array[k]);
+            }
+            foreach (int j in Context.array)
+            {
+                IOFile.content += Convert.ToString(j) + " ";
+            }
+            listBox1.Items.Add(IOFile.content);
+            listBox1.Items.Add("");
         }
         public void AddItemsListBox(int first = -1, int second = -1)
         {
@@ -48,11 +124,15 @@ namespace laba10
             InitializeComponent();
             bubbleSort = new BubbleSort(this);
             shell = new Shell(this);
+            iOFile = new IOFile(this);
         }
+
 
 
         private void button1_Click(object sender, EventArgs e)
         {
+            count = 0;
+            listBox1.Items.Clear();
             if (Context.array != null)
             {
                 if (radioButton1.Checked == true)
@@ -60,17 +140,17 @@ namespace laba10
                     this.context = new Context(bubbleSort);
                     context.ExecuteAlgorithm();
                     this.AddItemsListBox();
-                    IOFile.SaveData();
-                    button1.Enabled = false;
-                }
+                    SaveData();
+/*                    button1.Enabled = false;
+*/                }
                 if (radioButton2.Checked == true)
                 {
                     this.context = new Context(shell);
                     context.ExecuteAlgorithm();
                     this.AddItemsListBox();
-                    IOFile.SaveData();
-                    button1.Enabled = false;
-                }
+                    SaveData();
+/*                    button1.Enabled = false;
+*/                }
                 IOFile.content = "";
             }
             else
@@ -82,7 +162,14 @@ namespace laba10
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string path = openFileDialog1.FileName;
+            using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
+            {
+                Separator(sr);
+                sr.Close();
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -103,6 +190,18 @@ namespace laba10
                 textBox2.Text += Convert.ToString(Context.array[i]);
                 textBox2.Text += ", ";
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2(this);
+            form2.Show();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
+            openFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
         }
     }
 }
