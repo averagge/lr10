@@ -9,8 +9,12 @@ namespace laba10
     public class Shell: IStrategy
     {
         public int iterationCount = 0;
-        public static Form1 form1;
+        public Form1 form1;
 
+        public Shell(Form1 form1)
+        {
+            this.form1 = form1;
+        }
         public int[] Algorithm(int[] mas)
         {
 
@@ -51,9 +55,11 @@ namespace laba10
             resultTime.Minutes,
             resultTime.Seconds,
             resultTime.Milliseconds);
-            form1.label1.Text = Convert.ToString(ComparativeAnalyses.Comparison);
+            form1.Print(ComparativeAnalyses.Comparison, ComparativeAnalyses.NumberOfPermutations, elapsedTime);
+
+/*            form1.label1.Text = Convert.ToString(ComparativeAnalyses.Comparison);
             form1.label2.Text = Convert.ToString(ComparativeAnalyses.NumberOfPermutations);
-            form1.label3.Text = elapsedTime;
+            form1.label3.Text = elapsedTime;*/
             return mas;
 
 

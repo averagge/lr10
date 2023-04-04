@@ -15,7 +15,7 @@ namespace laba10
             this.ContextStrategy = Strategy;
         }
         public Context() { }
-        public void ExecuteAlgorithm(bool flag = true)
+        public void ExecuteAlgorithm()
         {
             ContextStrategy.Algorithm(array);
         }
