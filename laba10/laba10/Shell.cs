@@ -21,33 +21,42 @@ namespace laba10
             IOFile.FillContent();
             System.Diagnostics.Stopwatch myStopwatch = new System.Diagnostics.Stopwatch();
             myStopwatch.Start();
-            int j, step;
-            int tmp;
-            for (step = mas.Length / 2; step > 0; step /= 2)
+/*            int j, step;
+            int tmp;*/
+            int n = mas.Length;
+            int gap = n / 2;
+            while (gap > 0)
             {
-                for (int i = step; i < mas.Length; i++)
+                for (int i = gap; i < n; i++)
                 {
-                    tmp = mas[i];
-                    for (j = i; j >= step; j -= step)
+                    int temp = mas[i];
+                    int j = i;
+                    while (j >= gap)
                     {
                         this.iterationCount++;
                         IOFile.content += this.iterationCount.ToString() + " итерация: " + '\n';
-                        IOFile.InputInfoAboutComparison(mas[i], mas[j]);
+                        IOFile.InputInfoAboutComparison(temp, mas[j-gap]);
                         ComparativeAnalyses.Comparison++;
-                        if (tmp < mas[j - step])
+                        if (mas[j - gap] > temp)
                         {
-                            IOFile.InputInfoAboutTransposition(mas[i], mas[j]);
-                            mas[j] = mas[j - step];
+                            IOFile.InputInfoAboutTransposition(mas[j], mas[j - gap]);
                             ComparativeAnalyses.NumberOfPermutations++;
                             IOFile.FillContent();
-                            form1.AddItemsListBox(mas[i], mas[j]);
+                            form1.AddItemsListBox(mas[j], mas[j - gap]);
+                            mas[j] = mas[j - gap];
+                            j -= gap;
+                            mas[j] = temp;
+
+
                         }
                         else
-                            break;
+                            j -= gap;
                     }
-                    mas[j] = tmp;
-                }
+/*                    mas[j] = temp;
+*/                }
+                gap /= 2;
             }
+            
             myStopwatch.Stop();
             var resultTime = myStopwatch.Elapsed;
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:000}",

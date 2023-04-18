@@ -22,7 +22,7 @@ namespace laba10
         {
             foreach (var i in Context.array)
             {
-                content += Convert.ToString(i) + ' ';
+                content += Convert.ToString(i) + ", ";
             }
             content += '\n';
         }
