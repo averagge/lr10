@@ -10,6 +10,7 @@ using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace laba10
 {
@@ -20,6 +21,7 @@ namespace laba10
         private BubbleSort bubbleSort;
         private Shell shell;
         private IOFile iOFile;
+        private int[] range;
 
         public void Print(int comparison, int permut, string time)
         {
@@ -27,35 +29,18 @@ namespace laba10
             label2.Text = Convert.ToString(permut);
             label3.Text = time;
         }
-        public void SaveData()
-        {
-            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
-                return;
-            string path = saveFileDialog1.FileName;
-            System.IO.File.WriteAllText(path, IOFile.content);
-        }
-/*        public void LoadData()
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
-                return;
-            string path = openFileDialog1.FileName;
-            using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
-            {
-                Separator(sr);
-                sr.Close();
-            }
-        }*/
+
         private void Separator(StreamReader streamReader)
         {
             List<string> arrayList = new List<string>();
-            char[] listChar = { };
+            char[] listChar = new char[100];
             int CurrentFilePosition = 0;
             int TempMultiplicationResult = 0;
             int LoadedArrayElement = 0;
             int TempDigitCapacity = 0;
             while (streamReader.Peek() != -1)
             {
-                if (streamReader.Peek() == 32)
+                if (streamReader.Peek() == 44)
                 {
                     char[] vs = new char[2 * CurrentFilePosition];
                     streamReader.Read(vs, CurrentFilePosition, 1);
@@ -76,7 +61,7 @@ namespace laba10
                         CurrentFilePosition++;
                         TempDigitCapacity++;
                     }
-                    while (streamReader.Peek() != 32);
+                    while (streamReader.Peek() != 44);
                     string output = new string(Convert.ToString(LoadedArrayElement).ToCharArray().Reverse().ToArray());
                     int.TryParse(output, out LoadedArrayElement);
                     arrayList.Add(Convert.ToString(LoadedArrayElement));
@@ -100,9 +85,9 @@ namespace laba10
             {
                 IOFile.content += Convert.ToString(j) + " ";
             }
-            listBox1.Items.Add(IOFile.content);
-            listBox1.Items.Add("");
-        }
+            textBox2.Text=IOFile.content;
+/*            listBox1.Items.Add("");
+*/        }
         public void AddItemsListBox(int first = -1, int second = -1)
         {
             listBox1.Items.Add("");
@@ -110,11 +95,11 @@ namespace laba10
             {
                 if (item == first || item == second)
                 {
-                    listBox1.Items[count] += '[' + Convert.ToString(item) + ']' + ", ";
+                    listBox1.Items[count] += '[' + Convert.ToString(item) + ']' + ',';
                 }
                 else
                 {
-                    listBox1.Items[count] += Convert.ToString(item) + ", ";
+                    listBox1.Items[count] += Convert.ToString(item) + ',';
                 }
             }
             count++;
@@ -131,8 +116,8 @@ namespace laba10
 
         private void button1_Click(object sender, EventArgs e)
         {
-            count = 0;
-            listBox1.Items.Clear();
+            /*            listBox1.Items.Clear();
+            */
             if (Context.array != null)
             {
                 if (radioButton1.Checked == true)
@@ -140,19 +125,19 @@ namespace laba10
                     this.context = new Context(bubbleSort);
                     context.ExecuteAlgorithm();
                     this.AddItemsListBox();
-                    SaveData();
-/*                    button1.Enabled = false;
-*/                }
+                    /*                    button1.Enabled = false;
+                    */
+                }
                 if (radioButton2.Checked == true)
                 {
                     this.context = new Context(shell);
                     context.ExecuteAlgorithm();
                     this.AddItemsListBox();
-                    SaveData();
-/*                    button1.Enabled = false;
-*/                }
-                IOFile.content = "";
-            }
+                    /*                    button1.Enabled = false;
+                    */
+                }
+/*                IOFile.content = "";
+*/            }
             else
             {
                 MessageBox.Show("Массив пуст, сортировка невозможна");
@@ -174,7 +159,10 @@ namespace laba10
 
         private void button3_Click(object sender, EventArgs e)
         {
-
+            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string path = saveFileDialog1.FileName;
+            System.IO.File.WriteAllText(path, IOFile.content);
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -182,13 +170,17 @@ namespace laba10
             textBox2.Text = "";
             int n = Convert.ToInt32(textBox1.Text);
             Context.array = new int[n];
+            range = new int[n];
             Random rand = new Random();
             for (int i = 0; i < Context.array.Length; i++)
+            {
                 Context.array[i] = rand.Next(1000);
+                range[i] = Context.array[i];
+            }
             for (int i = 0; i < Context.array.Length; i++)
             {
                 textBox2.Text += Convert.ToString(Context.array[i]);
-                textBox2.Text += ", ";
+                textBox2.Text += ',';
             }
         }
 
@@ -202,6 +194,20 @@ namespace laba10
         {
             saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
             openFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
+            count = 0;
+            for (int i = 0; i < range.Length; i++)
+            {
+                Context.array[i] = range[i];
+            }
+            label1.Text = "";
+            label2.Text = "";
+            label3.Text = "";
+
         }
     }
 }
