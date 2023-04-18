@@ -10,18 +10,23 @@ namespace laba10
     {
         public int iterationCount = 0;
         public Form1 form1;
+        public Form2 form2;
+
 
         public BubbleSort(Form1 form1)
         {
             this.form1 = form1;
         }
-
+        public BubbleSort(Form2 form2)
+        {
+            this.form2 = form2;
+        }
 
         public int[] Algorithm(int[] mas)
         {
-            /*            if (flag)
-                        {*/
-
+            iterationCount = 0;
+            ComparativeAnalyses.Comparison = 0;
+            ComparativeAnalyses.NumberOfPermutations = 0;
             IOFile.FillContent();
             System.Diagnostics.Stopwatch myStopwatch = new System.Diagnostics.Stopwatch();
             myStopwatch.Start();
@@ -42,7 +47,8 @@ namespace laba10
                         mas[j] = temp;
                         ComparativeAnalyses.NumberOfPermutations++;
                         IOFile.FillContent();
-                        form1.AddItemsListBox(mas[i], mas[j]);
+                        if(form1!=null)
+                            form1.AddItemsListBox(mas[i], mas[j]);
                     }
                 }
             }
@@ -53,12 +59,11 @@ namespace laba10
             resultTime.Minutes,
             resultTime.Seconds,
             resultTime.Milliseconds);
-            form1.Print(ComparativeAnalyses.Comparison, ComparativeAnalyses.NumberOfPermutations, elapsedTime);
-/*            form1.label1.Text = Convert.ToString(ComparativeAnalyses.Comparison);
-            form1.label2.Text = Convert.ToString(ComparativeAnalyses.NumberOfPermutations);
-            form1.label3.Text = elapsedTime;*/
+            if (form1 != null)
+                form1.Print(ComparativeAnalyses.Comparison, ComparativeAnalyses.NumberOfPermutations, elapsedTime);
+            if (form2 != null)
+                form2.Tab(ComparativeAnalyses.Comparison, ComparativeAnalyses.NumberOfPermutations, elapsedTime);
             return mas;
-            /*}*/
         }
     }
 

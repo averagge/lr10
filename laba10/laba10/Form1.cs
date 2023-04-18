@@ -25,9 +25,14 @@ namespace laba10
 
         public void Print(int comparison, int permut, string time)
         {
-            label1.Text = Convert.ToString(comparison);
-            label2.Text = Convert.ToString(permut);
-            label3.Text = time;
+            label1.Text += Convert.ToString(comparison);
+            label2.Text += Convert.ToString(permut);
+            label3.Text += time;
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
+            openFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
         }
 
         private void Separator(StreamReader streamReader)
@@ -77,17 +82,19 @@ namespace laba10
                 }
             }
             Context.array = new int[arrayList.Count];
+            range = new int[arrayList.Count];
             for (int k = 0; k < arrayList.Count; k++)
             {
                 int.TryParse(arrayList[k], out Context.array[k]);
+                int.TryParse(arrayList[k], out range[k]);
+
             }
             foreach (int j in Context.array)
             {
-                IOFile.content += Convert.ToString(j) + " ";
+                IOFile.content += Convert.ToString(j) + ",";
             }
             textBox2.Text=IOFile.content;
-/*            listBox1.Items.Add("");
-*/        }
+        }
         public void AddItemsListBox(int first = -1, int second = -1)
         {
             listBox1.Items.Add("");
@@ -111,13 +118,9 @@ namespace laba10
             shell = new Shell(this);
             iOFile = new IOFile(this);
         }
-
-
-
         private void button1_Click(object sender, EventArgs e)
         {
-            /*            listBox1.Items.Clear();
-            */
+
             if (Context.array != null)
             {
                 if (radioButton1.Checked == true)
@@ -125,24 +128,19 @@ namespace laba10
                     this.context = new Context(bubbleSort);
                     context.ExecuteAlgorithm();
                     this.AddItemsListBox();
-                    /*                    button1.Enabled = false;
-                    */
                 }
                 if (radioButton2.Checked == true)
                 {
                     this.context = new Context(shell);
                     context.ExecuteAlgorithm();
                     this.AddItemsListBox();
-                    /*                    button1.Enabled = false;
-                    */
+
                 }
-/*                IOFile.content = "";
-*/            }
+            }
             else
             {
                 MessageBox.Show("Массив пуст, сортировка невозможна");
             }
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -162,7 +160,7 @@ namespace laba10
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
             string path = saveFileDialog1.FileName;
-            System.IO.File.WriteAllText(path, IOFile.content);
+            File.WriteAllText(path, IOFile.content);
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -189,13 +187,6 @@ namespace laba10
             Form2 form2 = new Form2(this);
             form2.Show();
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
-            openFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
-        }
-
         private void button6_Click(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
@@ -204,10 +195,12 @@ namespace laba10
             {
                 Context.array[i] = range[i];
             }
-            label1.Text = "";
-            label2.Text = "";
-            label3.Text = "";
-
+            label1.Text = "Сравнения: ";
+            label2.Text = "Перестановки: ";
+            label3.Text = "Время: ";
+            ComparativeAnalyses.Comparison = 0;
+            ComparativeAnalyses.NumberOfPermutations = 0;
+            IOFile.content = "";
         }
     }
 }

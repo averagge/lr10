@@ -10,19 +10,25 @@ namespace laba10
     {
         public int iterationCount = 0;
         public Form1 form1;
+        public Form2 form2;
+
 
         public Shell(Form1 form1)
         {
             this.form1 = form1;
         }
+        public Shell(Form2 form2)
+        {
+            this.form2 = form2;
+        }
         public int[] Algorithm(int[] mas)
         {
-
+            iterationCount = 0;
+            ComparativeAnalyses.Comparison = 0;
+            ComparativeAnalyses.NumberOfPermutations = 0;
             IOFile.FillContent();
             System.Diagnostics.Stopwatch myStopwatch = new System.Diagnostics.Stopwatch();
             myStopwatch.Start();
-/*            int j, step;
-            int tmp;*/
             int n = mas.Length;
             int gap = n / 2;
             while (gap > 0)
@@ -35,25 +41,27 @@ namespace laba10
                     {
                         this.iterationCount++;
                         IOFile.content += this.iterationCount.ToString() + " итерация: " + '\n';
-                        IOFile.InputInfoAboutComparison(temp, mas[j-gap]);
+                        IOFile.InputInfoAboutComparison(mas[j - gap], temp);
                         ComparativeAnalyses.Comparison++;
                         if (mas[j - gap] > temp)
                         {
-                            IOFile.InputInfoAboutTransposition(mas[j], mas[j - gap]);
-                            ComparativeAnalyses.NumberOfPermutations++;
+                            IOFile.InputInfoAboutTransposition(mas[j - gap], mas[j]);
+/*                            ComparativeAnalyses.NumberOfPermutations++;
                             IOFile.FillContent();
-                            form1.AddItemsListBox(mas[j], mas[j - gap]);
+                            form1.AddItemsListBox(mas[j], mas[j - gap]);*/
                             mas[j] = mas[j - gap];
                             j -= gap;
                             mas[j] = temp;
-
+                            ComparativeAnalyses.NumberOfPermutations++;
+                            IOFile.FillContent();
+                            if(form1!=null)
+                                form1.AddItemsListBox(mas[j], mas[j + gap]);
 
                         }
                         else
                             j -= gap;
                     }
-/*                    mas[j] = temp;
-*/                }
+                }
                 gap /= 2;
             }
             
@@ -64,14 +72,11 @@ namespace laba10
             resultTime.Minutes,
             resultTime.Seconds,
             resultTime.Milliseconds);
-            form1.Print(ComparativeAnalyses.Comparison, ComparativeAnalyses.NumberOfPermutations, elapsedTime);
-
-/*            form1.label1.Text = Convert.ToString(ComparativeAnalyses.Comparison);
-            form1.label2.Text = Convert.ToString(ComparativeAnalyses.NumberOfPermutations);
-            form1.label3.Text = elapsedTime;*/
+            if(form1!=null)
+                form1.Print(ComparativeAnalyses.Comparison, ComparativeAnalyses.NumberOfPermutations, elapsedTime);
+            if (form2 != null)
+                form2.Tab(ComparativeAnalyses.Comparison, ComparativeAnalyses.NumberOfPermutations, elapsedTime);
             return mas;
-
-
         }
     }
 }
